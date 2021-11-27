@@ -200,18 +200,19 @@ int ll_set(LinkedList* this, int index,void* pElement)
 int ll_remove(LinkedList* this,int index)
 {
     int returnAux = -1;
+    Node* aux1;
+    Node* aux2;
     if(this != NULL && (index >= 0 && index < ll_len(this))){
     	if(index == 0){
-    		this->pFirstNode = getNode(this, index)->pNextNode;
-    		free(getNode(this, index));
-    		this->size--;
-    	}else if(index == (ll_len(this)-1)){
-    		getNode(this, index-1)->pNextNode = NULL;
-    		free(getNode(this, index));
+    		aux1 = getNode(this, index);
+    		this->pFirstNode = aux1->pNextNode;
+    		free(aux1);
     		this->size--;
     	}else{
-    		getNode(this, index-1)->pNextNode = getNode(this, index)->pNextNode;
-    		free(getNode(this, index));
+    		aux1 = getNode(this, index);
+    		aux2 = getNode(this, index-1);
+    		aux2->pNextNode = aux1->pNextNode;
+    		free(aux1);
     		this->size--;
     	}
     	returnAux = 0;

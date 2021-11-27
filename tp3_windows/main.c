@@ -28,7 +28,7 @@ int main()
     int cargar=0;
     LinkedList* listaEmpleados = ll_newLinkedList();
     do{
-        utn_getInt(&option, "\n1.Cargar archivo(texto)\n2.Cargar Archivo(binario)\n3.Alta\n4.Modificar\n5.Eliminar\n6.Mostrar empleados\n7.Ordenar Sueldo\n8.Guardar en archivo(texto)\n9.Gurdar en archivo(binario)", "\nError", 1, 10, 5);
+        utn_getInt(&option, "\n1.Cargar archivo(texto)\n2.Cargar Archivo(binario)\n3.Alta\n4.Modificar\n5.Eliminar\n6.Mostrar empleados\n7.Ordenar Sueldo\n8.Guardar en archivo(texto)\n9.Gurdar en archivo(binario)\n", "\nError", 1, 10, 5);
         switch(option)
         {
             case 1:

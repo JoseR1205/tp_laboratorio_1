@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "wchar.h"
+#include <wchar.h>
 #include "LinkedList.h"
 #include "Employee.h"
 #include "Biblioteca.h"
@@ -16,25 +16,14 @@
  */
 int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
 {
-	char idAux[5];
-	char nombreAux[125];
-	char horasAux[50];
-	char sueldoAux[50];
+
 	int retorno = -1;
 	if(path!=NULL && pArrayListEmployee!=NULL){
 		FILE* f = fopen(path,"r");
-		Employee* aux;
-		fscanf(f,"%[^,],%[^,],%[^,],%[^\n]\n",idAux,nombreAux,horasAux,sueldoAux);
-		do{
-			if(fscanf(f,"%[^,],%[^,],%[^,],%[^\n]\n",idAux,nombreAux,horasAux,sueldoAux)==4){
-				aux = employee_newParametros(idAux, nombreAux, horasAux, sueldoAux);
-				if(aux!=NULL){
-					ll_add(pArrayListEmployee, aux);
-				}
-			}
-		}while(feof ( f ) ==0);
+		if(parser_EmployeeFromText(f, pArrayListEmployee)){
+			retorno = 0;
+		}
 		fclose(f);
-		retorno = 0;
 	}
     return retorno;
 }
@@ -49,19 +38,11 @@ int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
 int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 {
 	int retorno = -1;
-	FILE* f = fopen(path,"r");
-	Employee* aux;
+	FILE* f = fopen(path,"rb");
 	if(path!=NULL && pArrayListEmployee!=NULL){
-		do{
-			aux = employee_new();
-			if(fread(aux,sizeof(Employee),1,f)==1){
-				ll_add(pArrayListEmployee, aux);
-			}else{
-				employee_delete(aux);
-				break;
-			}
-		}while(feof ( f ) == 0);
-		retorno = 0;
+		if(parser_EmployeeFromBinary(f, pArrayListEmployee)==0){
+			retorno = 0;
+		}
 		fclose(f);
 	}
     return retorno;
@@ -244,8 +225,9 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 			fprintf(f,"%d,%s,%d,%d\n",aux->id,aux->nombre,aux->horasTrabajadas,aux->sueldo);
 			employee_delete(aux);
 		}
-		fclose(f);
+		fflush(f);
 		retorno = 0;
+		fclose(f);
 	}
 	ll_clear(pArrayListEmployee);
     return retorno;
@@ -262,7 +244,7 @@ int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 {
 	int retorno = -1;
 	if(path!=NULL&&pArrayListEmployee!=NULL){
-		FILE* f = fopen(path,"w");
+		FILE* f = fopen(path,"wb");
 		Employee* aux;
 		for(int i = 0; i < ll_len(pArrayListEmployee);i++){
 			aux = ll_get(pArrayListEmployee, i);

@@ -8,7 +8,7 @@ int utn_getChar(char cadena[], char *mensaje, char *mensajeError, int len, int r
 	for(int i = 0 ; i < reintentos; i++){
 		if(cadena!=NULL && mensaje != NULL && mensajeError != NULL && len > 0){
 			printf("%s", mensaje);
-			if(myGets(cadena, len)==0){
+			if(myGets(cadena, len)==0 && esNumerica(cadena)!=0){
 				retorno =0;
 				break;
 			}else{
@@ -74,11 +74,13 @@ int myGets(char pResultado[], int len){
 	int indexFinal;
 	if(fgets(pResultado,len,stdin)!=NULL)
 	{
-		indexFinal = strlen(pResultado)-1;
-		if(pResultado[indexFinal] == '\n'){
-			pResultado[indexFinal] = '\0';
+		if(pResultado[0]!='\n'){
+			indexFinal = strlen(pResultado)-1;
+			if(pResultado[indexFinal] == '\n'){
+				pResultado[indexFinal] = '\0';
+			}
+			retorno = 0;
 		}
-		retorno = 0;
 	}
 	return retorno;
 }
